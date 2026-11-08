@@ -1,0 +1,15 @@
+# Build output
+.build/
+build/
+.swiftpm/
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+
+# macOS folder metadata (stores file names and window positions)
+.DS_Store
+._*
+
+# Python bytecode
+__pycache__/
+*.pyc
