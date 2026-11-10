@@ -46,11 +46,22 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp ".build/release/RelayVSR" "$APP/Contents/MacOS/RelayVSR"
 # Release builds keep debug-map entries that name this Mac's build folder; drop them.
 strip -S -x "$APP/Contents/MacOS/RelayVSR"
+# The linker also adds search paths into the build Mac's Swift toolchains (which can sit in the
+# home folder). The app uses the Swift runtime built into macOS, so keep only /usr/lib ones.
+otool -l "$APP/Contents/MacOS/RelayVSR" | awk '/cmd LC_RPATH/ {getline; getline; print $2}' |
+while IFS= read -r rpath; do
+    case "$rpath" in /usr/lib/*) ;; *) install_name_tool -delete_rpath "$rpath" "$APP/Contents/MacOS/RelayVSR" ;; esac
+done
 cp "Resources/Info.plist" "$APP/Contents/Info.plist"
 cp "Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 
 # ditto keeps the symlinks inside the bundled Python intact.
 ditto --noextattr --norsrc "$STAGE" "$APP/Contents/Resources/Engine"
+# The app's own engine add-ons (see each one's __init__.py), loaded by ComfyUI as custom nodes.
+for addon in EngineAddons/*/; do
+    ditto --noextattr --norsrc "$addon" "$APP/Contents/Resources/Engine/ComfyUI/custom_nodes/$(basename "$addon")"
+done
+find "$APP/Contents/Resources/Engine/ComfyUI/custom_nodes" -name "__pycache__" -type d -prune -exec rm -rf {} +
 xattr -cr "$APP"
 
 # Nothing in the app may name this Mac's folders (home folder or project location).

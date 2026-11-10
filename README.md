@@ -48,7 +48,10 @@ it; delete that folder to stage it again. The engine is:
 - [ComfyUI](https://github.com/comfyanonymous/ComfyUI) at a pinned commit of its main
   branch (the RelayVSR nodes are not in a ComfyUI release yet);
 - the [ComfyUI-AppleSilicon-int8-Fast](https://github.com/Illuminus7/ComfyUI-AppleSilicon-int8-Fast)
-  node at a pinned commit (release 1.2.0).
+  node at a pinned commit (release 1.2.0);
+- the app's own small add-ons in `EngineAddons/`, copied in when the app is built. Today
+  that is one: it labels the upscaled video as BT.709, like the original, instead of
+  ComfyUI's sRGB label, which Apple's players show noticeably darker.
 
 The pinned versions are at the top of `scripts/build_engine.sh`. To build from local
 copies instead, set `COMFY_SRC` to a ComfyUI folder (and `INT8_SRC` to the int8-Fast

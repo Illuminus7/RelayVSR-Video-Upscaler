@@ -35,13 +35,8 @@ struct ContentView: View {
     // MARK: - Sections
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("RelayVSR")
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-            Text("Upscale a video ×2 or ×4 with RelayVSR. Built using Comfy engine.")
-                .font(.callout)
-                .foregroundStyle(.white.opacity(0.6))
-        }
+        Text("RelayVSR Video Upscaler")
+            .font(.system(size: 28, weight: .bold, design: .rounded))
     }
 
     private var videoCard: some View {
